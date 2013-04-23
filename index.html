@@ -68,8 +68,9 @@
                   .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
       // Draw the Y axis
-      var y_scale = d3.scale.identity();
-      y_scale.range([0, 150]);
+      var y_scale = d3.scale.linear();
+      y_scale.range([height, 0])
+             .domain([0, d3.max(villains, function(d) { return d.appearances })]);
       var y_axis = d3.svg.axis()
                          .scale(y_scale)
                          .orient('left');
@@ -80,10 +81,10 @@
          .enter()
          .append('rect')
          .attr('fill', 'black')
-         .attr('height', function(d) { return d.appearances; })
+         .attr('height', function(d) { return height - y_scale(d.appearances); })
          .attr('width', 20)
          .attr('x', function(d, i) { return 21 * i; })
-         .attr('y', 0);
+         .attr('y', function(d) { return y_scale(d.appearances); });
     </script>
   </body>
 </html>
