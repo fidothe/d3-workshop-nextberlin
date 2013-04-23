@@ -45,6 +45,9 @@
         stroke: black;
         stroke-width: 1px;
       }
+      .x.axis text {
+        text-align: left;
+      }
     </style>
     <script>
       var convert_csv_values = function(row) {
@@ -75,6 +78,18 @@
                          .scale(y_scale)
                          .orient('left');
       svg.append('g').attr('class', 'y axis').call(y_axis);
+      // Draw the X axis
+      var x_scale = d3.scale.ordinal()
+                      .domain(villains.map(function(d) { return d.name; }))
+                      .rangeRoundBands([0, width], .1);
+      var x_axis = d3.svg.axis()
+                         .scale(x_scale)
+                         .tickPadding(10)
+                         .orient('bottom');
+      svg.append('g').attr('class', 'x axis')
+                     .attr("transform", "translate(0," + height + ")")
+                     .call(x_axis);
+
       // Now draw the bars
       svg.selectAll('rect')
          .data(villains)
@@ -82,8 +97,8 @@
          .append('rect')
          .attr('fill', 'black')
          .attr('height', function(d) { return height - y_scale(d.appearances); })
-         .attr('width', 20)
-         .attr('x', function(d, i) { return 21 * i; })
+         .attr('width', x_scale.rangeBand())
+         .attr('x', function(d) { return x_scale(d.name); })
          .attr('y', function(d) { return y_scale(d.appearances); });
     </script>
   </body>
