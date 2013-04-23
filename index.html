@@ -82,24 +82,24 @@
       var x_scale = d3.scale.ordinal()
                       .domain(villains.map(function(d) { return d.name; }))
                       .rangeRoundBands([0, width], .1);
-      var x_axis = d3.svg.axis()
-                         .scale(x_scale)
-                         .tickPadding(10)
-                         .orient('bottom');
-      svg.append('g').attr('class', 'x axis')
-                     .attr("transform", "translate(0," + height + ")")
-                     .call(x_axis);
 
-      // Now draw the bars
-      svg.selectAll('rect')
+      // Now draw as a scatterplot
+      svg.selectAll('path.point')
          .data(villains)
          .enter()
-         .append('rect')
-         .attr('fill', 'black')
-         .attr('height', function(d) { return height - y_scale(d.appearances); })
-         .attr('width', x_scale.rangeBand())
-         .attr('x', function(d) { return x_scale(d.name); })
-         .attr('y', function(d) { return y_scale(d.appearances); });
+         .append('path')
+         .attr('class', 'point')
+         .attr("transform", function(d) { return "translate(" + x_scale(d.name) + "," + y_scale(d.appearances) + ")"; })
+         .attr("d", d3.svg.symbol())
+
+      svg.selectAll('text.label')
+         .data(villains)
+         .enter()
+         .append('text')
+         .attr('class', 'label')
+         .attr('text-anchor', 'middle')
+         .attr("transform", function(d) { return "translate(" + x_scale(d.name) + "," + (y_scale(d.appearances) - 10) + ")"; })
+         .text(function(d) { return d.name });
     </script>
   </body>
 </html>
