@@ -4,10 +4,58 @@
     <title>Data visualisation with D3 at NEXT Berlin 2013</title>
   </head>
   <body>
-    <script src="d3.min.js"></script>
+    <script src="d3.v3.min.js"></script>
     <script>
-      d3.csv('doctor_who.csv', function(error, rows) {
-      });
+      var villains_csv = [
+        'Villain,Year first,Year last,Doc. no.,Doctor actor,Episodes,"Stories, total","Motivation (invasion earth, kill humans, etc)",Story titles',
+        '"Autons (Marcellas, Commander and Claudio)",1970,2010,"3,9,11","Jon Pertwee, Christopher Eccleston, Matt Smith",11,4,Defeat the Doctor,"Terror of the Autons, Spearhead from Space, Rose, The Pandorica Opens/The Big Bang, Love & Monsters"',
+        'Black Guardian (the),1978,1979,"4,5","Tom Baker, Peter Davison",18,5,Wants evil,"The Key to Time, Terminus, Mawdryn Undead, Enlightenment, Armageddon factor"',
+        'Borusa,1976,1983,"1, 2, 3, 4, 5","William Hartnell, Patrick Troughton, Jon Pertwee, Tom Baker, Peter Davison",15,4,Wants immortality,"The Deadly Assassin, The Invasion of Time, Arc of Infinity, The Five Doctors"',
+        'Cyber-leader,1975,1988,"1,2,3,4,5,6,7","William Hartnell, Patrick Troughton, Jon Pertwee, Tom Baker, Peter Davison, Colin Baker, Sylvester Mc Coy ",14,5,Serve big bad ,"Revenge of the Cybermen, Earthshock, The Five Doctors, Attack of the Cybermen, Silver Nemesis"',
+        'Cybermat,1967,2011,"2,4,11","Patrick Troughton, Tom Baker, Matt Smith",15,4,Serve big bad,"Tomb of the Cybermen, Wheel in space, Revenge of the Cybermen, Closing Time"',
+        'Cybermen,1966,2010,"1, 2, 3, 4, 5, 6, 7, 10, 11","William Hartnell, Patrick Troughton, Jon Pertwee, Tom Baker, Peter Davison, Colin Baker, Sylvester McCoy, David Tennant, Matt Smith",56,24,Earth invasion/Human extermination,"The Tenth Planet, The Moonbase, The Tomb of the Cybermen, The Wheel in Space, The Invasion, Revenge of the Cybermen, Earthshock, The Five Doctors, Attack of the Cybermen, Silver Nemesis, Rise of the Cybermen/The Age of Steel, Army of Ghosts/Doomsday, The Next Doctor, The Pandorica Opens, The War Games, The Mind of Evil, Carnival of Monsters, Logopolis, Mawdryn Undead, Dalek, Human Nature, A Good Man Goes to War, Closing Time"',
+        'Daleks,1963,2010,"1, 2, 3, 4, 5, 6, 7, 9, 10, 11","William Hartnell, Patrick Troughton, Jon Pertwee, Tom Baker, Peter Davison, Colin Baker, Sylvester McCoy, Christopher Eccleston, David Tennant, Matt Smith",104,34,Earth invasion/Human extermination,"The Daleks, The Dalek Invasion of Earth, The Chase, Mission to the Unknown, The Daleks\' Master Plan, The Power of the Daleks, The Evil of the Daleks, Day of the Daleks, Planet of the Daleks, Death to the Daleks, Genesis of the Daleks, Destiny of the Daleks, Resurrection of the Daleks, Revelation of the Daleks, Remembrance of the Daleks, Dalek, Bad Wolf/The Parting of the Ways, Army of Ghosts/Doomsday, Daleks in, Manhattan/Evolution of the Daleks, The Stolen Earth, Journey\'s End, Victory of the Daleks, The Pandorica Opens, The Big Bang, The Space Museum, The Wheel in Space, The War Games, The Mind of Evil, Frontier in Space, The Five Doctors, Doctor Who, Human Nature, The Waters of Mars, The Beast Below, The Wedding of River Song, Asylum of the Daleks"',
+        '"Dalek Supreme (Supreme Dalek), inc Progenitor",1964,2010,"1, 2, 3, 4, 5, 6, 7, 10, 11","William Hartnell, Patrick Troughton, Jon Pertwee, Tom Baker, Peter Davison, Colin Baker, Sylvester McCoy, David Tennant, Matt Smith",63,14,Earth invasion/Human extermination,"Dalek Invasion of earth, The Daleks\' Master Plan, The Chase, The Evil of the Daleks, Day of the Daleks, Frontier in Space, Planet of the Daleks, Destiny of the Daleks, Resurrection of the Daleks, Revelation of the Daleks, Remembrance of the Daleks, The Stolen Earth/Journey\'s End, Victory of the Daleks, The Pandorica Opens"',
+        'Davros,1975,2008,"4, 5, 6, 7, 10","Tom Baker, Peter Davison, Colin Baker, Sylvester McCoy, David Tennant",22,6,Earth invasion/Human extermination,"Genesis of the Daleks, Destiny of the Daleks, Resurrection of the Daleks, Revelation of the Daleks, Remembrance of the Daleks, The Stolen Earth/Journey\'s End"',
+        '"Glitz, Sabalom",1986,1987,"6,7","Colin Baker, Sylvester McCoy",9,3,Self-interest,"The Mysterious Planet, The Ultimate Foe, Dragonfire"',
+        '"Great Intelligence, the (Yog-Sothoth)",1967,2013,"2,11","Patrick Troughton, Matt Smith",14,4,World domination,"The Abominable Snowmen/The Web of Fear, The Snowmen, The Bells of Saint John"',
+        'Ice Warriors (inc benevolent appearences),1967,1974,"2,3","Patrick Troughton, Jon Pertwee",24,6,Absorb planets,"The Ice Warriors, The Seeds of Death, The Curse of Peladon, The Monster of Peladon,The War Games, The Mind of Evil"',
+        'Judoon,2007,2010,"10,11","David Tennant, Matt Smith",3,3,Obey bureaucracy,"Smith & Jones, The Stolen Earth, The Pandorica Opens (see Alliance above)"',
+        '"Kovarian, Madame",2011,2011,11,Matt Smith,5,4,Kill Doctor and companions,"Day of the Moon, The Curse of the Black Spot, The Rebel Flesh/The Almost People, A Good Man Goes to War, The Wedding of River Song"',
+        'Master (the),1971,2009,"3,4,5,6,7,8,10","Patrick Troughton, Jon Pertwee, Tom Baker, Peter Davison, Colin Baker, Sylvester McCoy, Paul McGann, David Tennant",84,22,Universal control,"Terror of the Autons,The Mind of Evil,The Claws of Axos,Colony in Space,The Dæmons,The Sea Devils,The Time Monster,Frontier in Space,The Deadly Assassin,The Keeper of Traken,Logopolis,Castrovalva,Time-Flight,The King\'s Demons,The Five Doctors,Planet of Fire,The Mark of the Rani,The Ultimate Foe,Survival,Doctor Who,Utopia/The Sound of Drums/Last of the Time Lords,The End of Time,The Caves of Androzani"',
+        'Nestene Consciousness,1970,2010,"3,9",Jon Pertwee,9,3,Universal control,Spearhead from Space/Terror of the Autons/Rose',
+        '"Ood, the (Oodkind), inc benevolent appearances",2006,2010,"10,11","David Tennant, Matt Smith",6,4,Serve big bad,"The Impossible Planet/The Satan Pit, Planet of the Ood, The Waters of Mars, Human Nature"',
+        'Rani (the),1985,1993,"3,4,5,6,7","Jon Pertwee, Tom Baker, Peter Davison, Colin Baker, Sylvester McCoy",8,3,"Enslavement, Medical experimentation","The Mark of the Rani, Dimensions in Time, Time and the Rani"',
+        'Roboforms,2005,2010,"10,11","David Tennant, Matt Smith",3,3,Scavengers/Imprison the Doctor,"The Christmas Invasion, The Runaway Bride, The Pandorica Opens (see Alliance above)"',
+        'Silence (the),2011,2011,11,Matt Smith,4,3,World domination,"The Impossible Astronaut/Day of the Moon, Let\'s Kill Hitler, The Wedding of River Song"',
+        'Silurians (exc Sea Devils),1970,2010,"3,5,11","Jon Pertwee, Peter Davison, Matt Smith",16,6,World domination,"Doctor Who and the Silurians, Warriors of the Deep, The Hungry Earth/Cold Blood, The Pandorica Opens (see Alliance above), A Good Man Goes to War"',
+        'Sontarans,1973,2008,"2,3,4,6,10,11","Patrick Troughton, Jon Pertwee, Tom Baker, Colin Baker, David Tennant, Matt Smith",21,9,"War, world domination","The Time Warrior, The Sontaran Experiment, The Invasion of Time, The Two Doctors, The Sontaran Stratagem/The Poison Sky, Logopolis, The End of Time, The Pandorica Opens, A Good Man Goes to War"',
+        'Valeyard (the),1986,1986,6,Colin Baker,18,3,Kill the Doctor,"The Mysterious Planet/The Ultimate Foe, Trial of a Timelord"',
+        'Weeping Angels,2007,2012,"10,11","David Tennant, Matt Smith",4,3,"Kill, trap in time","Blink, The Time of Angels/Flesh and Stone, The Angels Take Manhattan"',
+        'Yeti,1967,1983,"1,2,3,4,5","William Hartnell, Patrick Troughton, Jon Pertwee, Tom Baker, Peter Davison",13,3,Serve big bad,"The Abominable Snowmen, The Web of Fear, The Five Doctors"'
+      ].join('\n');
+    </script>
+    <script>
+      var convert_csv_values = function(row) {
+        return {
+          name: row['Villain'],
+          appearances: +row['Episodes']
+        };
+      };
+      var villains = d3.csv.parse(villains_csv, convert_csv_values);
+      // create SVG container
+      var svg = d3.select('body').append('svg')
+                  .attr('width', '1000')
+                  .attr('height', '300');
+      svg.selectAll('rect')
+         .data(villains)
+         .enter()
+         .append('rect')
+         .attr('fill', 'black')
+         .attr('height', function(d) { return d.appearances; })
+         .attr('width', 20)
+         .attr('x', function(d, i) { return 21 * i; })
+         .attr('y', 0);
     </script>
   </body>
 </html>
