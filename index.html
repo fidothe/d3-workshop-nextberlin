@@ -35,6 +35,17 @@
         'Yeti,1967,1983,"1,2,3,4,5","William Hartnell, Patrick Troughton, Jon Pertwee, Tom Baker, Peter Davison",13,3,Serve big bad,"The Abominable Snowmen, The Web of Fear, The Five Doctors"'
       ].join('\n');
     </script>
+    <style>
+      .axis path {
+        stroke-width: 1px;
+        stroke: black;
+        fill: none;
+      }
+      .axis line {
+        stroke: black;
+        stroke-width: 1px;
+      }
+    </style>
     <script>
       var convert_csv_values = function(row) {
         return {
@@ -43,10 +54,27 @@
         };
       };
       var villains = d3.csv.parse(villains_csv, convert_csv_values);
+      // Some basic information about our chart dimensions
+      var total_width = 960,
+          total_height = 500,
+          margin = {top: 20, right: 20, bottom: 30, left: 40},
+          width = total_width - margin.left - margin.right,
+          height = total_height - margin.top - margin.bottom;
+
       // create SVG container
       var svg = d3.select('body').append('svg')
-                  .attr('width', '1000')
-                  .attr('height', '300');
+                  .attr('width', total_width)
+                  .attr('height', total_height)
+                  .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      // Draw the Y axis
+      var y_scale = d3.scale.identity();
+      y_scale.range([0, 150]);
+      var y_axis = d3.svg.axis()
+                         .scale(y_scale)
+                         .orient('left');
+      svg.append('g').attr('class', 'y axis').call(y_axis);
+      // Now draw the bars
       svg.selectAll('rect')
          .data(villains)
          .enter()
